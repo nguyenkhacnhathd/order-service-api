@@ -44,13 +44,16 @@ class ConfigService {
     return {
       type: 'postgres',
 
+      schema: 'nns',
+      keepConnectionAlive: true,
+
       host: this.getValue('DB_DEFAULT_HOST'),
       port: parseInt(this.getValue('DB_DEFAULT_PORT')),
       username: this.getValue('DB_DEFAULT_USERNAME'),
       password: this.getValue('DB_DEFAULT_PASSWORD'),
       database: this.getValue('DB_DEFAULT_NAME'),
 
-      entities: ['dist/src/**/*.entity.js'],
+      entities: [__dirname + '/**/*.entity.{ts, js}'],
 
       migrationsTableName: 'migration',
 
