@@ -1,0 +1,34 @@
+version: '2.4'
+services:
+  order-service-api:
+    image: nhatnk/order-service-api:20210726
+    ports:
+      - 5100:5100
+    volumes:
+      - .:/var/task
+    working_dir: /var/task
+    environment:
+      - HOST=0.0.0.0
+      - PORT=5100
+    user: ${COMPOSE_UID:-1000}:${COMPOSE_GID:-1000}
+    command: ['bash', '-c', 'npm run start:dev']
+  db:
+    image: codenetjp/fmdb:20180629
+    ports:
+      - "5433:5432"
+    volumes: # REMOVE_ON_CI
+      - fm-db-data:/var/lib/postgresql/data # REMOVE_ON_CI
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fm
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - TZ=Asia/Tokyo
+    command: ['postgres', '-c', 'log_min_duration_statement=1000']
+    logging:
+      options:
+        max-file: '2'
+        max-size: '1m'
+volumes:
+  fm-db-data:
+    driver: local
